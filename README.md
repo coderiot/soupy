@@ -28,6 +28,7 @@ information about a soup.io Blog
 >>> b.get_friends()
 ```
 Result:
+
 ```python
 ['http://pralina.soup.io',
 'http://noirpoulet.soup.io',
