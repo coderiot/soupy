@@ -5,7 +5,7 @@ Soupy
 Requirements
 ------------
 
- - mechanizei (http://wwwsearch.sourceforge.net/mechanize/)
+ - mechanize (http://wwwsearch.sourceforge.net/mechanize/)
  - lxml (http://lxml.de/)
 
 
