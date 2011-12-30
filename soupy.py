@@ -358,6 +358,11 @@ class SoupIterator(object):
         # get post type 
         post['type'] = self._get_post_type(parent.get('class'))
 
+        # get post title
+        title = parent.cssselect("div.'icon type' a")
+        if title:
+            post['title'] = title[0].get('title')
+
         #TODO get tags
         post['tags'] = []
 
