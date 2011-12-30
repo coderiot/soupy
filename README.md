@@ -1,10 +1,20 @@
+Soupy
+====
+*soupy* - Python Bindings for soup.io
+
+Requirements
+------------
+
+ - mechanizei (http://wwwsearch.sourceforge.net/mechanize/)
+ - lxml (http://lxml.de/)
+
+
 Usage
-=====
+-----
 
-Post on your soup.io account
--------
+### Post on your soup.io account
 
-### login/logout
+#### login/logout
 
 ```python
 >>> acc = soupy.SoupAccount(<USERNAME>, <PASSWORD>)
@@ -16,46 +26,45 @@ True
 False
 ```
 
-### post link
+#### post link
 
 ```python
 >>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
 >>> acc.post_link('<LINK>', '<TITLE>', '<DESCRIPTION>')
 ```
-### post text
+#### post text
 
 ```python
 >>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
 >>> acc.post_text('this is the body', 'and the title')
 ```
-### post quote
+#### post quote
 
 ```python
 >>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
 >>> acc.post_quote('<QUOTE>', '<SOURCE>')
 ```
-### post link to an image
+#### post link to an image
 
 ```python
 >>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
 >>> acc.post_image('<LINK>', '<DESCRIPTION>')
 ```
-### post link to a video
+#### post link to a video
 
 ```python
 >>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
 >>> acc.post_video('<LINK TO VIDEO>', '<DESCRIPTION>')
 ```
-### repost stuff from soup.io
+#### repost stuff from soup.io
 
 ```python
 >>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
 >>> acc.repost('<SOUP_SOURCE_URL>', '<SOUP_POST_ID>')
 ```
-read blog posts
---------------
+### read blog posts
 
-### Recent Posts
+#### Recent Posts
 
 ```python
 >>> b = soupy.SoupBlog('http://cats.soup.io')
@@ -76,7 +85,7 @@ Result:
   ...
 ]
 ```
-### iterate over all blog posts
+#### iterate over all blog posts
 ```python
 >>> b = soupy.SoupBlog('http://cats.soup.io')
 >>> for p in b.post_iterator():
@@ -116,10 +125,9 @@ Result:
 }
 ```
 
-informations about a soup.io Blog
---------------
+### informations about a soup.io Blog
 
-### Friends
+#### Friends
 ```python
 >>> b = soupy.SoupBlog('http://cats.soup.io')
 >>> b.get_friends()
@@ -142,7 +150,7 @@ Result:
 'http://straycat.soup.io',
 'http://supe.soup.io']
 ```
-### get blog infos
+#### get blog infos
 ```python
 >>> b = soupy.SoupBlog('http://cats.soup.io/')
 >>> b.info()
@@ -156,7 +164,7 @@ Result:
  'url': 'http://cats.soup.io/',
  'username': 'cats'}
 ```
-### user avatar
+#### user avatar
 ```python
 >>> b = soupy.SoupBlog('http://cats.soup.io')
 >>> b.avatar()
@@ -168,8 +176,7 @@ Result:
  'url': 'http://f.asset.soup.io/asset/0218/7823_abdf.jpeg'}
 ```
 
-Changelog
----------
+### Changelog
 
 **0.1**
  - initial release
