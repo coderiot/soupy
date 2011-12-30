@@ -30,19 +30,19 @@ information about a soup.io Blog
 Result:
 ```python
 ['http://pralina.soup.io',
- 'http://noirpoulet.soup.io',
- 'http://MyDarknessPony.soup.io',
- 'http://SzulcArt.soup.io',
- 'http://zoozia.soup.io',
- 'http://longvomiting.soup.io',
- 'http://beargrylls.soup.io',
- 'http://Nosoypuntual.soup.io',
- 'http://ingenuidad.soup.io',
- 'http://szmaragdowykot.soup.io',
- 'http://autumnalcrush.soup.io',
- 'http://KaylaWolfie.soup.io',
- 'http://straycat.soup.io',
- 'http://supe.soup.io']
+'http://noirpoulet.soup.io',
+'http://MyDarknessPony.soup.io',
+'http://SzulcArt.soup.io',
+'http://zoozia.soup.io',
+'http://longvomiting.soup.io',
+'http://beargrylls.soup.io',
+'http://Nosoypuntual.soup.io',
+'http://ingenuidad.soup.io',
+'http://szmaragdowykot.soup.io',
+'http://autumnalcrush.soup.io',
+'http://KaylaWolfie.soup.io',
+'http://straycat.soup.io',
+'http://supe.soup.io']
 ```
 ### get blog infos
 ```python
