@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+import datetime
+import json.loads
 
-from lxml import etree
-from lxml import html
-
-from json import loads
+import lxml.etree
+import lxml.html
 
 import mechanize
 
@@ -83,7 +82,7 @@ class SoupAccount(object):
         self.browser.open(self.blog_url)
 
     def _check_auth(self, login_resp):
-        doc = html.fromstring(login_resp)
+        doc = lxml.html.fromstring(login_resp)
         if doc.find_class('error'):
             self._authenticate = False
         else:
@@ -234,12 +233,12 @@ class SoupBlog(object):
 
     def get_friends(self):
         """docstring for get_friends"""
-        doc = html.parse(self.url + FRIENDS_SUFFIX).getroot()
+        doc = lxml.html.parse(self.url + FRIENDS_SUFFIX).getroot()
         return [link.get('href') for link in doc.cssselect('li.vcard a')]
 
     def info(self):
         """docstring for info"""
-        doc = etree.parse(self.url + RSS_SUFFIX)
+        doc = lxml.etree.parse(self.url + RSS_SUFFIX)
         info = dict()
         info['title'] = doc.xpath('/rss/channel/title')[0].text
         info['url'] = doc.xpath('//channel/link')[0].text
@@ -255,7 +254,7 @@ class SoupBlog(object):
 
     def avatar(self):
         """Return the URL of an avatar"""
-        doc = etree.parse(self.url + RSS_SUFFIX)
+        doc = lxml.etree.parse(self.url + RSS_SUFFIX)
         avatar = dict()
         avatar['url'] = doc.xpath('//image/url')[0].text
         size = dict()
@@ -268,7 +267,7 @@ class SoupBlog(object):
     #TODO repost_info dictionary entry with is_repost, from and via keys
     def recent_posts(self):
         """Return the ~40 of the recent posts from the blog."""
-        doc = etree.parse(self.url + RSS_SUFFIX)
+        doc = lxml.etree.parse(self.url + RSS_SUFFIX)
 
         posts = list()
         for item in doc.xpath('/rss/channel/item'):
@@ -281,7 +280,7 @@ class SoupBlog(object):
             pubDate = item.xpath('pubDate')[0].text
             post['date'] = pubDate2unixtime(pubDate)
             attrs = item.xpath('soup:attributes', namespaces={'soup': 'http://www.soup.io/rss'})[0].text
-            attrs = loads(attrs)
+            attrs = json.loads(attrs)
 
             post['tags'] = attrs['tags']
             post['source'] = attrs['source']
@@ -330,7 +329,7 @@ class SoupIterator(object):
         self.browser.open(url)
 
         r = self.browser.open(url)
-        doc = html.fromstring(r.read())
+        doc = lxml.html.fromstring(r.read())
 
         posts = list()
         for c in doc.cssselect('div.content-container'):
@@ -338,7 +337,7 @@ class SoupIterator(object):
 
         try:
             more = self.browser.find_link(text='more posts')
-            self.next_page =  more.absolute_url
+            self.next_page = more.absolute_url
         except Exception, e:
             self.has_more = False
 
@@ -443,5 +442,5 @@ class SoupIterator(object):
 
 def pubDate2unixtime(pubDate):
     """Convert the soup.io published Date to unix timestamp """
-    dt = datetime.strptime(pubDate, '%a, %d %b %Y %H:%M:%S %Z')
+    dt = datetime.datetime.strptime(pubDate, '%a, %d %b %Y %H:%M:%S %Z')
     return long(dt.strftime('%s'))
