@@ -5,6 +5,7 @@
 
  - mechanize (http://wwwsearch.sourceforge.net/mechanize/)
  - lxml (http://lxml.de/)
+ - cssselect
 
 ## Installation
 ```sh
