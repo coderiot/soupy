@@ -41,9 +41,9 @@ TOOGLE_URL = 'http://www.soup.io/remote/toggle/frame'
     
 """
 #TODO: Soup ist kein Account Objekt, ermöglicht aber das Einloggen über login
-#TODO: catch exception 
+#TODO: catch exception
 #TODO: es muss möglich sein einen Blog komplett durchzulaufen, um alle Eintrage anzusehen
-#TODO: mann muss seine eigene friends bekommen können und es möglich sein die dazugehörige timeline 
+#TODO: mann muss seine eigene friends bekommen können und es möglich sein die dazugehörige timeline
 #      zu durchlaufen
 class SoupAccount(object):
     """docstring for SoupAccount"""
@@ -53,7 +53,7 @@ class SoupAccount(object):
         self.blog_url = BLOG_URL % login_name
         self.post_url = POST_URL % login_name
         self.browser = mechanize.Browser(factory=mechanize.RobustFactory())
-        
+
         #br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
         self._authenticate = False
@@ -71,7 +71,7 @@ class SoupAccount(object):
         # open login page
         self.browser.open(LOGIN_URL)
 
-        # select login form and set fields 
+        # select login form and set fields
         self.browser.select_form(nr=0)
         self.browser.form['login'] = self.login_name
         self.browser.form['password'] = self.password
@@ -103,7 +103,7 @@ class SoupAccount(object):
         # Create an empty HTML Form. Mind the enctype!
         form = mechanize.HTMLForm(self.post_url, method='POST', enctype='multipart/form-data')
 
-        # Put simple input types in the form. 
+        # Put simple input types in the form.
         form.new_control('text', 'post[title]', {'value': ''})
         form.new_control('text', 'post[body]', {'value': ''})
         form.new_control('text', 'post[tags]', {'value': ''})
@@ -144,7 +144,7 @@ class SoupAccount(object):
         request['post[source]'] = url
         request['post[title]'] = title
         request['post[body]'] = description
-        
+
         self._submit(request)
 
     def post_image(self, url, description=''):
@@ -155,7 +155,7 @@ class SoupAccount(object):
         request['post[url]'] = url
         request['post[source]'] = url
         request['post[body]'] = description
-        
+
         self._submit(request)
 
     def post_quote(self, quote, source):
@@ -165,7 +165,7 @@ class SoupAccount(object):
 
         request['post[body]'] = quote
         request['post[title]'] = source
-        
+
         self._submit(request)
 
     def post_video(self, video_link, description):
@@ -175,7 +175,7 @@ class SoupAccount(object):
 
         request['post[embedcode_or_url]'] = video_link
         request['post[body]'] = description
-        
+
         self._submit(request)
 
     def post_file(self):
@@ -204,7 +204,7 @@ class SoupAccount(object):
         auth = self._get_repost_auth(toogle_url)
         form = mechanize.HTMLForm(REPOST_URL, method='POST', enctype='application/x-www-form-urlencoded')
 
-        # Put simple input types in the form. 
+        # Put simple input types in the form.
         form.new_control('text', 'auth', {'value': auth})
         form.new_control('text', 'parent_id', {'value': post_id})
 
@@ -220,7 +220,7 @@ FRIENDS_SUFFIX = '/friends'
 """
 
     Docstring for Blog
-    
+
 """
 #TODO entweder Blog und Group in verschiedenen Klassen und versuchen zu mergen
 #       muss auf jeden Fall unterschieden werden
@@ -233,7 +233,7 @@ class SoupBlog(object):
         return SoupIterator(self.url)
 
     def get_friends(self):
-        """docstring for get_friends"""            
+        """docstring for get_friends"""
         doc = html.parse(self.url + FRIENDS_SUFFIX).getroot()
         return [link.get('href') for link in doc.cssselect('li.vcard a')]
 
@@ -244,8 +244,8 @@ class SoupBlog(object):
         info['title'] = doc.xpath('/rss/channel/title')[0].text
         info['url'] = doc.xpath('//channel/link')[0].text
         info['description'] = doc.xpath('//description')[0].text
-        
-        # extract username from url 
+
+        # extract username from url
         info['username'] = info['url'].replace('http://', '').split('.', 1)[0]
         # get timestamp of last update
         date_str = doc.xpath('/rss/channel/item/pubDate')[0].text
@@ -275,7 +275,7 @@ class SoupBlog(object):
             post = dict()
             post['title'] = item.xpath('title')[0].text
             link = item.xpath('link')[0].text
-            # remove title in url 
+            # remove title in url
             post['link'] = link.rsplit('/', 1)[0]
             post['guid'] = item.xpath('guid')[0].text
             pubDate =  item.xpath('pubDate')[0].text
@@ -293,7 +293,7 @@ class SoupBlog(object):
 
     # TODO
     def stalkers(self):
-        """Returns a list of the followers of a blog 
+        """Returns a list of the followers of a blog
         with name url and recent post"""
         pass
 
@@ -301,7 +301,7 @@ class SoupBlog(object):
 """
 
     Docstring for SoupIterator
-    
+
 """
 class SoupIterator(object):
     """docstring for SoupIterator"""
@@ -309,7 +309,7 @@ class SoupIterator(object):
         # remove trailing '/'
         self.url = url.rstrip('/')
         self.browser = mechanize.Browser(factory=mechanize.RobustFactory())
-        
+
         self.browser.set_handle_robots(False)
         self.has_more = True
         self.next_page = self.url
@@ -332,8 +332,8 @@ class SoupIterator(object):
 
         r = self.browser.open(url)
         doc = html.fromstring(r.read())
-        
-        posts = list() 
+
+        posts = list()
         for c in doc.cssselect('div.content-container'):
             posts.append(self._get_post_details(c))
 
@@ -355,7 +355,7 @@ class SoupIterator(object):
         #remove title from link
         #post['link'] = link.rsplit('/', 1)[0]
 
-        # get post type 
+        # get post type
         post['type'] = self._get_post_type(parent.get('class'))
 
         # get post title
@@ -386,7 +386,7 @@ class SoupIterator(object):
             video_src = c.cssselect('div.embed iframe')
             if video_src:
                 post['video_src'] = video_src[0].get('src')
-            
+
             video_src_alt = c.xpath('//embed')
             if video_src_alt:
                 post['video_src'] = video_src_alt[0].get('src')
@@ -443,5 +443,5 @@ class SoupIterator(object):
 
 def pubDate2unixtime(pubDate):
     """Convert the soup.io published Date to unix timestamp """
-    dt = datetime.strptime(pubDate, '%a, %d %b %Y %H:%M:%S %Z') 
+    dt = datetime.strptime(pubDate, '%a, %d %b %Y %H:%M:%S %Z')
     return long(dt.strftime('%s'))
