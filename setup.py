@@ -9,6 +9,7 @@ setup(name='soupy',
     author='peterrr',
     url='https://github.com/peterrr/soupy/',
     install_requires=['lxml >= 3.0',
+                      'cssselect >= 0.8',
                       'mechanize'],
     py_modules=['soupy']
 )
