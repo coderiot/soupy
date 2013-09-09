@@ -11,12 +11,12 @@ import mechanize
 
 
 class SoupError(Exception):
-    ''' General Soup error ''' 
+    ''' General Soup error '''
     def __init__(self, msg):
-        self.msg = msg 
+        self.msg = msg
 
     def __str__(self):
-        return self.msg 
+        return self.msg
 
 
 class SoupAuthError(SoupError):
@@ -32,21 +32,20 @@ LOGIN_URL = 'https://www.soup.io/login'
 BLOG_URL = 'http://%s.soup.io/'
 POST_URL = 'http://%s.soup.io/save'
 REPOST_URL = 'http://www.soup.io/remote/repost'
-TOOGLE_URL = 'http://www.soup.io/remote/toggle/frame' 
+TOOGLE_URL = 'http://www.soup.io/remote/toggle/frame'
 
 
-"""
-
-    Docstring for Soup
-    
-"""
 #TODO: Soup ist kein Account Objekt, ermöglicht aber das Einloggen über login
 #TODO: catch exception
 #TODO: es muss möglich sein einen Blog komplett durchzulaufen, um alle Eintrage anzusehen
 #TODO: mann muss seine eigene friends bekommen können und es möglich sein die dazugehörige timeline
 #      zu durchlaufen
 class SoupAccount(object):
-    """docstring for SoupAccount"""
+    """
+
+        Docstring for Soup
+
+    """
     def __init__(self, login_name, password):
         self.login_name = login_name
         self.password = password
@@ -136,7 +135,7 @@ class SoupAccount(object):
 
         self._submit(request)
 
-    def post_link(self, url, title = '', description = ''):
+    def post_link(self, url, title='', description=''):
         """docstring for post_link"""
         request = self._create_default_request()
         request['post[type]'] = "PostLink"
@@ -191,7 +190,7 @@ class SoupAccount(object):
         pass
 
     def _get_repost_auth(self, url):
-        r =self.browser.open(url)
+        self.browser.open(url)
         self.browser.select_form(nr=0)
         return self.browser.form['auth']
 
@@ -217,14 +216,15 @@ class SoupAccount(object):
 RSS_SUFFIX = '/rss'
 FRIENDS_SUFFIX = '/friends'
 
-"""
 
-    Docstring for Blog
-
-"""
 #TODO entweder Blog und Group in verschiedenen Klassen und versuchen zu mergen
 #       muss auf jeden Fall unterschieden werden
 class SoupBlog(object):
+    """
+
+        Docstring for Blog
+
+    """
     def __init__(self, url):
         self.url = url
 
@@ -269,7 +269,7 @@ class SoupBlog(object):
     def recent_posts(self):
         """Return the ~40 of the recent posts from the blog."""
         doc = etree.parse(self.url + RSS_SUFFIX)
- 
+
         posts = list()
         for item in doc.xpath('/rss/channel/item'):
             post = dict()
@@ -278,15 +278,15 @@ class SoupBlog(object):
             # remove title in url
             post['link'] = link.rsplit('/', 1)[0]
             post['guid'] = item.xpath('guid')[0].text
-            pubDate =  item.xpath('pubDate')[0].text
+            pubDate = item.xpath('pubDate')[0].text
             post['date'] = pubDate2unixtime(pubDate)
-            attrs =  item.xpath('soup:attributes', namespaces={'soup': 'http://www.soup.io/rss'})[0].text
+            attrs = item.xpath('soup:attributes', namespaces={'soup': 'http://www.soup.io/rss'})[0].text
             attrs = loads(attrs)
 
             post['tags'] = attrs['tags']
             post['source'] = attrs['source']
             post['body'] = attrs['body']
-            post['type'] =attrs['type']
+            post['type'] = attrs['type']
             posts.append(post)
 
         return posts
@@ -298,13 +298,12 @@ class SoupBlog(object):
         pass
 
 
-"""
-
-    Docstring for SoupIterator
-
-"""
 class SoupIterator(object):
-    """docstring for SoupIterator"""
+    """
+
+        Docstring for SoupIterator
+
+    """
     def __init__(self, url):
         # remove trailing '/'
         self.url = url.rstrip('/')
@@ -417,7 +416,7 @@ class SoupIterator(object):
 
         post['reposted'] = dict(zip(['from', 'via'], source))
 
-        meta =  parent.cssselect("span.'time' abbr")
+        meta = parent.cssselect("span.'time' abbr")
         if meta:
             post['published'] = meta[0].get('title')
 
@@ -439,7 +438,8 @@ class SoupIterator(object):
         elif 'post_review' in type_string:
             return 'review'
         else:
-             return 'file'
+            return 'file'
+
 
 def pubDate2unixtime(pubDate):
     """Convert the soup.io published Date to unix timestamp """
