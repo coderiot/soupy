@@ -1,16 +1,17 @@
-Soupy
-====
+# Soupy
 *soupy* - Python Bindings for soup.io
 
-Requirements
-------------
+## Requirements
 
  - mechanize (http://wwwsearch.sourceforge.net/mechanize/)
  - lxml (http://lxml.de/)
 
+## Installation
+```sh
+$ pip install -e git+https://github.com/peterrr/soupy.git#egg=soupy
+```
 
-Usage
------
+## Usage
 
 ### Post on your soup.io account
 
