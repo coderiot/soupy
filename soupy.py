@@ -212,8 +212,8 @@ class SoupAccount(object):
         self.browser.submit()
 
 
-rss = '%s/rss'
-friends = '%s/friends'
+rss = 'http://%s.soup.io/rss'
+friends = 'http://%s.soup.io/friends'
 
 
 #TODO entweder Blog und Group in verschiedenen Klassen und versuchen zu mergen
@@ -222,21 +222,21 @@ class SoupBlog(object):
     """
         Docstring for Blog
     """
-    def __init__(self, url):
-        self.url = url
+    def __init__(self, name):
+        self.name = name
 
     def post_iterator(self):
         """docstring for post_iterator"""
-        return SoupIterator(self.url)
+        return SoupIterator(self.name)
 
     def get_friends(self):
         """docstring for get_friends"""
-        doc = lxml.html.parse(friends % self.url).getroot()
+        doc = lxml.html.parse(friends % self.name).getroot()
         return [link.get('href') for link in doc.cssselect('li.vcard a')]
 
     def info(self):
         """docstring for info"""
-        doc = lxml.etree.parse(rss % self.url)
+        doc = lxml.etree.parse(rss % self.name)
         info = dict()
 
         # TODO: replace html special chars
@@ -256,7 +256,7 @@ class SoupBlog(object):
 
     def avatar(self):
         """Return the URL of an avatar"""
-        doc = lxml.etree.parse(rss % self.url)
+        doc = lxml.etree.parse(rss % self.name)
 
         avatar = dict()
         avatar['url'] = doc.find('/channel/image/url').text
@@ -271,7 +271,7 @@ class SoupBlog(object):
     #TODO repost_info dictionary entry with is_repost, from and via keys
     def recent_posts(self):
         """Return the ~40 of the recent posts from the blog."""
-        doc = lxml.etree.parse(rss % self.url)
+        doc = lxml.etree.parse(rss % self.name)
 
         posts = list()
         for item in doc.find('/channel/item'):
