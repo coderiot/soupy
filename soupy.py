@@ -302,7 +302,7 @@ class SoupBlog(object):
     def followers(self):
         """Returns a list of the followers of a blog
         with name url and recent post"""
-        pass
+        return NotImplementedError('not implemented yet.')
 
 
 class SoupIterator(object):
@@ -311,9 +311,10 @@ class SoupIterator(object):
         Docstring for SoupIterator
 
     """
-    def __init__(self, url):
+    def __init__(self, name):
         # remove trailing '/'
-        self.url = url.rstrip('/')
+        self.url = "http://%s,soup.io" % name
+        self.name = name
         self.browser = mechanize.Browser(factory=mechanize.RobustFactory())
 
         self.browser.set_handle_robots(False)
@@ -449,7 +450,7 @@ class SoupIterator(object):
 
 
 def parse_date(date_str):
-    """Convert the soup.io published Date to unix timestamp
+    """Convert the soup.io published Date to python datetime object.
 
     :date_str: string of date in soup.io format.
     :returns: python datetime object.
