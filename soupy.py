@@ -2,6 +2,7 @@
 
 import datetime
 import json.loads
+import re
 
 import lxml.etree
 import lxml.html
@@ -37,8 +38,7 @@ TOOGLE_URL = 'http://www.soup.io/remote/toggle/frame'
 #TODO: Soup ist kein Account Objekt, ermöglicht aber das Einloggen über login
 #TODO: catch exception
 #TODO: es muss möglich sein einen Blog komplett durchzulaufen, um alle Eintrage anzusehen
-#TODO: mann muss seine eigene friends bekommen können und es möglich sein die dazugehörige timeline
-#      zu durchlaufen
+#TODO: mann muss seine eigene friends bekommen können und es möglich sein die dazugehörige timeline zu durchlaufen
 class SoupAccount(object):
     """
 
@@ -212,17 +212,15 @@ class SoupAccount(object):
         self.browser.submit()
 
 
-RSS_SUFFIX = '/rss'
-FRIENDS_SUFFIX = '/friends'
+rss = '%s/rss'
+friends = '%s/friends'
 
 
 #TODO entweder Blog und Group in verschiedenen Klassen und versuchen zu mergen
 #       muss auf jeden Fall unterschieden werden
 class SoupBlog(object):
     """
-
         Docstring for Blog
-
     """
     def __init__(self, url):
         self.url = url
@@ -233,33 +231,39 @@ class SoupBlog(object):
 
     def get_friends(self):
         """docstring for get_friends"""
-        doc = lxml.html.parse(self.url + FRIENDS_SUFFIX).getroot()
+        doc = lxml.html.parse(friends % self.url).getroot()
         return [link.get('href') for link in doc.cssselect('li.vcard a')]
 
     def info(self):
         """docstring for info"""
-        doc = lxml.etree.parse(self.url + RSS_SUFFIX)
+        doc = lxml.etree.parse(rss % self.url)
         info = dict()
-        info['title'] = doc.xpath('/rss/channel/title')[0].text
-        info['url'] = doc.xpath('//channel/link')[0].text
-        info['description'] = doc.xpath('//description')[0].text
+
+        # TODO: replace html special chars
+        info['title'] = doc.find('/channel/title').text
+        info['url'] = doc.find('/channel/link').text
+        info['description'] = doc.find('/channel/description').text
 
         # extract username from url
-        info['username'] = info['url'].replace('http://', '').split('.', 1)[0]
+        _, name, _, _ = re.split('\.|//', info['url'])
+        info['name']
+
         # get timestamp of last update
-        date_str = doc.xpath('/rss/channel/item/pubDate')[0].text
-        info['updated'] = pubDate2unixtime(date_str)
+        date_str = doc.find('/channel/item/pubDate').text
+        info['updated'] = parse_date(date_str)
 
         return info
 
     def avatar(self):
         """Return the URL of an avatar"""
-        doc = lxml.etree.parse(self.url + RSS_SUFFIX)
+        doc = lxml.etree.parse(rss % self.url)
+
         avatar = dict()
-        avatar['url'] = doc.xpath('//image/url')[0].text
+        avatar['url'] = doc.find('/channel/image/url').text
+
         size = dict()
-        size['width'] = int(doc.xpath('//image/width')[0].text)
-        size['height'] = int(doc.xpath('//image/height')[0].text)
+        size['width'] = int(doc.find('/channel/image/width').text)
+        size['height'] = int(doc.find('/channel/image/height').text)
         avatar['size'] = size
 
         return avatar
@@ -267,20 +271,24 @@ class SoupBlog(object):
     #TODO repost_info dictionary entry with is_repost, from and via keys
     def recent_posts(self):
         """Return the ~40 of the recent posts from the blog."""
-        doc = lxml.etree.parse(self.url + RSS_SUFFIX)
+        doc = lxml.etree.parse(rss % self.url)
 
         posts = list()
-        for item in doc.xpath('/rss/channel/item'):
+        for item in doc.find('/channel/item'):
             post = dict()
-            post['title'] = item.xpath('title')[0].text
-            link = item.xpath('link')[0].text
+            post['title'] = item.find('title').text
+            post['link'] = item.find('link').text
             # remove title in url
-            post['link'] = link.rsplit('/', 1)[0]
-            post['guid'] = item.xpath('guid')[0].text
-            pubDate = item.xpath('pubDate')[0].text
-            post['date'] = pubDate2unixtime(pubDate)
-            attrs = item.xpath('soup:attributes', namespaces={'soup': 'http://www.soup.io/rss'})[0].text
-            attrs = json.loads(attrs)
+            #post['link'] = link.rsplit('/', 1)[0]
+
+            post['guid'] = item.find('guid').text
+
+            pubDate = item.find('pubDate').text
+            post['date'] = parse_date(pubDate)
+
+            attrs = item.find('soup:attributes',
+                              namespaces={'soup': 'http://www.soup.io/rss'})
+            attrs = json.loads(attrs.text)
 
             post['tags'] = attrs['tags']
             post['source'] = attrs['source']
@@ -291,7 +299,7 @@ class SoupBlog(object):
         return posts
 
     # TODO
-    def stalkers(self):
+    def followers(self):
         """Returns a list of the followers of a blog
         with name url and recent post"""
         pass
@@ -440,7 +448,12 @@ class SoupIterator(object):
             return 'file'
 
 
-def pubDate2unixtime(pubDate):
-    """Convert the soup.io published Date to unix timestamp """
-    dt = datetime.datetime.strptime(pubDate, '%a, %d %b %Y %H:%M:%S %Z')
-    return long(dt.strftime('%s'))
+def parse_date(date_str):
+    """Convert the soup.io published Date to unix timestamp
+
+    :date_str: string of date in soup.io format.
+    :returns: python datetime object.
+
+    """
+    dt = datetime.datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %Z')
+    return dt
