@@ -5,6 +5,7 @@ from distutils.core import setup
 
 setup(name='soupy',
     version='0.1.0',
+    license='GPLv2',
     description='description',
     author='peterrr',
     url='https://github.com/peterrr/soupy/',
