@@ -3,8 +3,8 @@
 
 ## Requirements
 
- - mechanize (http://wwwsearch.sourceforge.net/mechanize/)
- - lxml (http://lxml.de/)
+ - [requests](http://docs.python-requests.org/en/latest/)
+ - [lxml](http://lxml.de/)
  - cssselect
 
 ## Installation
@@ -14,60 +14,8 @@ $ pip install -e git+https://github.com/peterrr/soupy.git#egg=soupy
 
 ## Usage
 
-### Post on your soup.io account
-
-#### login/logout
-
-```python
->>> acc = soupy.SoupAccount(<USERNAME>, <PASSWORD>)
->>> acc.login()
->>> acc.is_auth()
-True
->>> acc.logout()
->>> acc.is_auth()
-False
-```
-
-#### post link
-
-```python
->>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
->>> acc.post_link('<LINK>', '<TITLE>', '<DESCRIPTION>')
-```
-#### post text
-
-```python
->>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
->>> acc.post_text('this is the body', 'and the title')
-```
-#### post quote
-
-```python
->>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
->>> acc.post_quote('<QUOTE>', '<SOURCE>')
-```
-#### post link to an image
-
-```python
->>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
->>> acc.post_image('<LINK>', '<DESCRIPTION>')
-```
-#### post link to a video
-
-```python
->>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
->>> acc.post_video('<LINK TO VIDEO>', '<DESCRIPTION>')
-```
-#### repost stuff from soup.io
-
-```python
->>> acc = soupy.SoupAccount('<USERNAME>', '<PASSWORD>')
->>> acc.repost('<SOUP_SOURCE_URL>', '<SOUP_POST_ID>')
-```
-### read blog posts
-
-#### Recent Posts
-
+### blog methods
+#### list recent posts
 ```python
 >>> b = soupy.SoupBlog('http://cats.soup.io')
 >>> b.recent_posts()
@@ -77,8 +25,8 @@ Result:
 
 ```python
 [{'body': None,
-  'date': 1325185210L,
-  'guid': 'urn:www-soup-io:1:205499522',
+  'date': datetime.datetime(2013, 8, 17, 22, 43, 7),
+  'post_id': 205499522,
   'link': 'http://cats.soup.io/post/205499522',
   'source': None,
   'tags': [],
@@ -86,53 +34,11 @@ Result:
   'type': u'image'},
   ...
 ]
-```
-#### iterate over all blog posts
+`
+
+#### list friends of blog
 ```python
->>> b = soupy.SoupBlog('http://cats.soup.io')
->>> for p in b.post_iterator():
-...     print p
-```
-
-Result:
-
-```python
-[{'format': 'some',
-  'reaction': [],
-  'reposted': {'from': 'http://proof.soup.io/post/139187574/Image'},
-  'reposters': [],
-  'size': {'height': '307', 'width': '500'},
-  'tags': [],
-  'type': 'image'},
- {'caption': 'http://24.media.tumblr.com/tumblr_lwvu0equXU1r40kt5o1_500.jpg',
-  'format': 'some',
-  'reaction': [],
-  'reposted': {},
-  'reposters': ['http://gjktptd.soup.io',
-                'http://nothingmore.soup.io',
-                'http://lejdimagbet.soup.io',
-                'http://toc.soup.io',
-                'http://lmn.soup.io',
-                'http://straycat.soup.io',
-                'http://abl.soup.io',
-                'http://my-dirty-litte-secret.soup.io',
-                'http://judyta.soup.io',
-                'http://beawesome.soup.io',
-                'http://flowerose.soup.io',
-                 'http://butterfly94.soup.io'],
-  'size': {'height': '500', 'width': '500'},
-  'tags': [],
-  'type': 'image'},
- ...
-}
-```
-
-### informations about a soup.io Blog
-
-#### Friends
-```python
->>> b = soupy.SoupBlog('http://cats.soup.io')
->>> b.get_friends()
+>>> soupy.blog.friends('http://cats.soup.io')
 ```
 Result:
 
@@ -154,31 +60,74 @@ Result:
 ```
 #### get blog infos
 ```python
->>> b = soupy.SoupBlog('http://cats.soup.io/')
->>> b.info()
+>>> b = soupy.blog.info('http://cats.soup.io/')
 ```
 Result:
 
 ```python
 {'description': None,
  'title': "cats's soup",
- 'updated': 1325185210L,
+ 'updated': datetime.datetime(2013, 9, 13, 13, 27, 34),
  'url': 'http://cats.soup.io/',
  'username': 'cats'}
 ```
-#### user avatar
+#### getting avatar of the blog
 ```python
->>> b = soupy.SoupBlog('http://cats.soup.io')
->>> b.avatar()
+>>> soupy.blog.avatar('http://cats.soup.io')
 ```
 Result:
 
 ```python
 {'size': {'height': 59, 'width': 59},
  'url': 'http://f.asset.soup.io/asset/0218/7823_abdf.jpeg'}
+### user methods
+
+### user methods
+
+#### creating an user object
+
+```python
+>>> user_blog = soupy.User(<USERNAME>, <PASSWORD>)
+```
+
+#### post link
+
+```python
+>>> user_blog.post_link('<LINK>', '<TITLE>', '<DESCRIPTION>')
+```
+#### post text
+
+```python
+>>> user_blog.post_text('this is the body', 'and the title')
+```
+#### post quote (not implented yet)
+
+```python
+>>> user_blog.post_quote('<QUOTE>', '<SOURCE>')
+```
+#### post link to an image
+
+```python
+>>> user_blog.post_image('<LINK>', '<DESCRIPTION>')
+```
+#### post link to a video
+
+```python
+>>> user_blog.post_video('<LINK TO VIDEO>', '<DESCRIPTION>')
+```
+#### repost stuff from soup.io
+
+```python
+>>> user_blog.repost('<SOUP_SOURCE_URL>', '<SOUP_POST_ID>')
 ```
 
 ### Changelog
 
 **0.1**
  - initial release
+**0.2**
+ - using python requests instead mechanize
+ - create soupy package
+ - split soupy.py to soupy.blog, soupy.user, soupy.request
+ - changing api in general
+ - removing Postiterator
