@@ -34,7 +34,7 @@ Result:
   'type': u'image'},
   ...
 ]
-`
+```
 
 #### list friends of blog
 ```python
@@ -58,6 +58,7 @@ Result:
 'http://straycat.soup.io',
 'http://supe.soup.io']
 ```
+
 #### get blog infos
 ```python
 >>> b = soupy.blog.info('http://cats.soup.io/')
@@ -71,6 +72,7 @@ Result:
  'url': 'http://cats.soup.io/',
  'username': 'cats'}
 ```
+
 #### getting avatar of the blog
 ```python
 >>> soupy.blog.avatar('http://cats.soup.io')
@@ -80,10 +82,9 @@ Result:
 ```python
 {'size': {'height': 59, 'width': 59},
  'url': 'http://f.asset.soup.io/asset/0218/7823_abdf.jpeg'}
-### user methods
+```
 
 ### user methods
-
 #### creating an user object
 
 ```python
