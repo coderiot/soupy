@@ -13,10 +13,12 @@ friends = '%s/friends'
 
 
 def friends(blog_url):
-    """@todo: Docstring for friends
+    """
+    A list of soup.io blogs that are friends with
+    the given blog_url.
 
-    :blog: @todo
-    :returns: @todo
+    :blog_url: string, the url of a soup.io blog
+    :returns:  list, the friends of given blog
 
     """
     doc = lxml.html.parse(friends % blog_url).getroot()
@@ -24,10 +26,11 @@ def friends(blog_url):
 
 
 def info(blog_url):
-    """@todo: Docstring for friends
+    """
+    Getting informations about the given soup.io blog.
 
-    :blog: @todo
-    :returns: @todo
+    :blog_url: string, the url of a soup.io blog
+    :returns: dict, some infos about the soup.io blog
 
     """
     doc = lxml.etree.parse(rss % blog_url)
@@ -50,10 +53,11 @@ def info(blog_url):
 
 
 def avatar(blog_url):
-    """@todo: Docstring for avatar
+    """
+    The avatar of the given soup.io blog.
 
-    :blog: @todo
-    :returns: @todo
+    :blog_url: string, the url of a soup.io blog
+    :returns: dict, that contains size and url of the avatar
 
     """
     doc = lxml.etree.parse(rss % blog_url)
@@ -70,10 +74,11 @@ def avatar(blog_url):
 
 
 def recent_posts(blog_url):
-    """@todo: Docstring for recent_posts
+    """
+    The 40 most recent posts of the given soup.io blog.
 
-    :blog: @todo
-    :returns: @todo
+    :blog_url: string, the url of a soup.io blog
+    :returns: list of dictionaries, the posts of the given soup.io blog
 
     """
     doc = lxml.etree.parse(rss % blog_url)
@@ -103,10 +108,13 @@ def recent_posts(blog_url):
     return posts
 
 
-# TODO
 def followers(blog_url):
-    """Returns a list of the followers of a blog
-    with name url and recent post"""
+    """
+    Return list of followers.
+
+    :blog_url: string, the url of a soup.io blog
+    :returns: list,
+    """
     raise NotImplementedError('not implemented yet.')
 
 

@@ -16,10 +16,21 @@ urls = {
 
 
 class SoupRequest(object):
-    """Docstring for SoupRequest """
+    """
+    A Helper Object for the communication between soup.io
+    and the User Api.
+    """
 
     def __init__(self, username, password):
-        """@todo: to be defined1 """
+        """
+        Authenticates the user on soup.io website.
+
+        :username: string, name of user
+        :password: string, password of user
+
+        :returns: string, the auth token for the user
+
+        """
         self.username = username
         self.blog_url = urls['base'] % username
         self.session = requests.Session()
@@ -27,11 +38,14 @@ class SoupRequest(object):
         self.token, self.blog_id = self.get_token_and_id(username)
 
     def auth(self, username, password):
-        """@todo: Docstring for _login
+        """
+        Login on soup.io and returns an auth key
+        for the user.
 
-        :username: @todo
-        :password: @todo
-        :returns: @todo
+        :username: string, name of user
+        :password: string, password of user
+
+        :returns: string, the auth token for the user
 
         """
         r = self.session.get(urls['login'], verify=True)
@@ -58,15 +72,23 @@ class SoupRequest(object):
         return auth
 
     def logout(self):
-        """@todo: Docstring for _logout
-
-        :returns: @todo
+        """
+        Destroy the session for the user.
 
         """
         self.session.get(urls['logout'])
         del self.session.cookies['soup_user_id']
 
     def get_token_and_id(self, username):
+        """
+        Used after login to get a user token and the blog
+        id of the user.
+
+        :username: string, username you need token and id for
+
+        :returns: (string, string), first the token of the user
+                  and second the blog id corresponding to the users blog.
+        """
         data = {'v': 5,
                 's': 'a',
                 'u': urls['base'] % username,
@@ -87,10 +109,11 @@ class SoupRequest(object):
         return token, blog_id
 
     def post(self, post_data):
-        """@todo: Docstring for _post
+        """
+        Genereic method to post content on your soup.io blog.
 
-        :post_data: @todo
-        :returns: @todo
+        :post_data: dict, with specific items depend on post type.
+        :returns:
 
         """
         data = {}
@@ -104,10 +127,11 @@ class SoupRequest(object):
             post.raise_for_status()
 
     def repost(self, post_id):
-        """@todo: Docstring for repost
+        """Repost the given post from another blog to your
+        soup.io blog.
 
-        :post_id: @todo
-        :returns: @todo
+        :post_id: int/string, id of the post
+        :returns:
 
         """
         data = {}
