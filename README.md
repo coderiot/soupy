@@ -126,6 +126,7 @@ Result:
 
 **0.1**
  - initial release
+
 **0.2**
  - using python requests instead mechanize
  - create soupy package
