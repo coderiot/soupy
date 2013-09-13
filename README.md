@@ -94,12 +94,12 @@ Result:
 #### post link
 
 ```python
->>> user_blog.post_link('<LINK>', '<TITLE>', '<DESCRIPTION>')
+>>> user_blog.post_video('<LINK TITLE>', '<URL FOR LINK>')
 ```
 #### post text
 
 ```python
->>> user_blog.post_text('this is the body', 'and the title')
+>>> user_blog.post_text('<TEXT TITLE>', '<TEXT BODY>')
 ```
 #### post quote (not implented yet)
 
@@ -109,17 +109,17 @@ Result:
 #### post link to an image
 
 ```python
->>> user_blog.post_image('<LINK>', '<DESCRIPTION>')
+>>> user_blog.post_image('<IMAGE URL>')
 ```
 #### post link to a video
 
 ```python
->>> user_blog.post_video('<LINK TO VIDEO>', '<DESCRIPTION>')
+>>> user_blog.post_video('<URL OR EMBED_CODE OF VIDEO>')
 ```
 #### repost stuff from soup.io
 
 ```python
->>> user_blog.repost('<SOUP_SOURCE_URL>', '<SOUP_POST_ID>')
+>>> user_blog.repost('<SOUP_POST_ID>')
 ```
 
 ### Changelog
