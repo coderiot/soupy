@@ -9,7 +9,7 @@
 
 ## Installation
 ```sh
-$ pip install -e git+https://github.com/peterrr/soupy.git#egg=soupy
+$ pip install -e git+https://github.com/coderiot/soupy.git#egg=soupy
 ```
 
 ## Usage
